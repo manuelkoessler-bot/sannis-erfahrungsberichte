@@ -1,0 +1,968 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vorschau /erfahrungsberichte/</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{overflow-x:hidden}
+body{margin:0;background:#fff;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+ font-size:18px;line-height:1.72;color:#211B2E;-webkit-font-smoothing:antialiased}
+.bar{background:#442768;color:#fff;padding:10px 18px;font-size:13px;position:sticky;top:0;z-index:20}
+.page{max-width:760px;margin:0 auto;padding:26px 22px 60px}
+h1.theme{font-family:'Poppins',sans-serif;font-size:clamp(26px,4.4vw,40px);color:#211B2E;margin:14px 0 6px;line-height:1.25}
+.crumb{font-size:13px;color:#4A4358}.crumb a{color:#9182A5;text-decoration:none}
+.wpc{margin-top:44px;border-top:1px solid #E7E2EF;padding-top:30px}
+.wpc h2{font-family:'Poppins',sans-serif;font-size:26px;color:#211B2E;margin:0 0 18px}
+ol.comment-list,ol.comment-list ol.children{list-style:none!important;padding:0;margin:0}
+ol.comment-list li{list-style:none!important}
+ol.comment-list ol.children{margin:10px 0 0 34px}
+.cbody{border:1px solid #E7E2EF;border-radius:16px;padding:16px 20px;margin-bottom:12px;font-size:16px;color:#4A4358}
+.cbody.chld{background:#FAF9FC}
+.cbody .m{color:#9182A5;font-size:13px;margin-bottom:6px}
+.badge{position:fixed;right:14px;bottom:14px;background:#fff;border-radius:12px;
+ box-shadow:0 6px 22px rgba(0,0,0,.18);padding:9px 12px;font-size:11px;z-index:30;text-align:center;line-height:1.35}
+.badge b{display:block;color:#442768;font-size:14px}
+/* ============================================================
+   Kommentarformular im SANNIS-Violett.
+   Abgeglichen mit dem LIVE-Markup von sannis.at/erfahrungsberichte/
+   (Stand 17.08.2026). Die Selektoren treffen genau das, was
+   WordPress dort ausgibt. Es muss nichts am Formular geaendert
+   werden, dieses CSS reicht.
+
+   Live-Struktur zur Kontrolle:
+     div#respond.comment-respond
+       span#reply-title.comment-reply-title   "Schreibe einen Kommentar"
+       form#commentform.comment-form
+         div.comment-form-wprm-rating          (bereits inline display:none)
+         p.comment-notes                        span#email-notes + span.required-field-message
+         p.comment-form-comment                 label[for=comment]  textarea#comment  required
+         p.comment-form-author                  label[for=author]   input#author      required
+         p.comment-form-email                   label[for=email]    input#email       required
+         p.comment-form-url                     label[for=url]      input#url
+         p.comment-form-cookies-consent         checkbox + label
+         p.form-submit                          input#submit "Kommentar abschicken"
+   ============================================================ */
+
+/* border-box, sonst ragen die Felder aus dem violetten Kasten heraus */
+#respond,#respond *{box-sizing:border-box}
+
+#respond{background:#442768;color:#fff;border-radius:20px;padding:30px 32px;margin:42px 0 0;
+  max-width:100%;overflow:hidden}
+
+#respond .comment-reply-title{display:block;color:#fff;font-family:'Poppins',sans-serif;
+  font-size:23px;font-weight:600;line-height:1.25;margin:0 0 6px}
+#respond .comment-reply-title small{font-size:14px;font-weight:400;display:block;margin-top:4px}
+#respond .comment-reply-title small a{color:rgba(255,255,255,.8)}
+
+#respond p{margin:0 0 16px;color:rgba(255,255,255,.9);font-size:16px}
+#respond .comment-notes{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:20px}
+#respond .required{color:#C9982E}
+
+#respond label{display:block;color:rgba(255,255,255,.92);font-size:15px;margin-bottom:6px}
+
+#respond textarea,
+#respond input[type=text],
+#respond input[type=email],
+#respond input[type=url]{
+  width:100%;max-width:100%;display:block;
+  background:#fff;color:#211B2E;border:0;border-radius:14px;
+  padding:14px 18px;font-family:inherit;font-size:15px;line-height:1.5}
+#respond textarea{min-height:140px;resize:vertical}
+#respond textarea::placeholder,#respond input::placeholder{color:#9182A5}
+#respond textarea:focus,#respond input:focus{outline:2px solid #C9982E;outline-offset:2px}
+
+/* Das Theme stellt Name und E-Mail nebeneinander (float:left, 47% / 50%).
+   Diese Aufteilung bleibt unveraendert, hier nur sauber abschliessen. */
+#respond .comment-form-cookies-consent,
+#respond .form-submit{clear:both}
+
+/* Checkbox "Angaben speichern" nebeneinander statt untereinander */
+#respond .comment-form-cookies-consent{display:flex;align-items:flex-start;gap:10px}
+#respond .comment-form-cookies-consent input{width:17px;height:17px;margin-top:4px;
+  flex:none;accent-color:#C9982E}
+#respond .comment-form-cookies-consent label{margin:0;font-size:13px;color:rgba(255,255,255,.7)}
+
+#respond .form-submit{margin:4px 0 0}
+#respond .form-submit input[type=submit]{
+  width:auto;background:#fff;color:#442768;border:0;border-radius:50px;
+  padding:14px 28px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;
+  cursor:pointer;transition:transform .15s ease}
+#respond .form-submit input[type=submit]:hover{transform:translateY(-2px)}
+
+#respond a{color:#fff;text-decoration:underline}
+@media(max-width:560px){#respond{padding:24px 20px}}
+
+/* Platz fuer den Trusted Shops Trustbadge unten rechts */
+@media(max-width:768px){.page-id-356 #comments{padding-bottom:72px}}
+
+
+/* ---------- BEREITS GEKLAERT, nichts zu tun ----------
+   a) Feld "Website": ist im HTML vorhanden, wird aber vom Theme bereits
+      ausgeblendet (#respond .comment-form-url{display:none}).
+      Im Formular sichtbar sind nur Kommentar, Name und E-Mail-Adresse.
+      Hier ist nichts zu aendern.
+
+   b) Feld "Recipe Rating" (WP Recipe Maker): steht im HTML mit
+      style="display: none" und ist damit ebenfalls unsichtbar.
+      Auch hier ist nichts zu aendern.
+
+   c) Die Texte "Schreibe einen Kommentar" und "Kommentar abschicken"
+      sind WordPress-Standard und bleiben so (Entscheidung Manuel,
+      17.08.2026: kein Zusatzaufwand). Sie liessen sich nur per
+      Uebersetzung oder Filter aendern, nicht per CSS.
+   --------------------------------------------------- */
+/* --- Regeln, die auf sannis.at aus dem Theme kommen (nur fuer die Vorschau) --- */
+#respond .comment-form-url{display:none}
+#respond .comment-form-author{float:left;width:47%;margin-right:2.703529412%}
+#respond .comment-form-email{float:left;width:50%}
+#respond .comment-form-author input,#respond .comment-form-email input,#respond textarea{width:100%}
+</style></head><body>
+<div class="bar"><b>Vorschau</b> · geplanter Umbau von sannis.at/erfahrungsberichte/ · alles unter der grauen Linie rendert WordPress <span style="float:right;opacity:.75">Stand 18.08.2026</span></div>
+<div class="page">
+<div class="crumb"><a href="#">Startseite</a> › Erfahrungsberichte</div>
+<h1 class="theme">SANNIS Erfahrungen: Kundenstimmen zu Skin Food, Bio-Leinöl und vielen weiteren Produkten</h1>
+<!-- ============================ BLOCK A ============================ -->
+
+<style>
+/* ============================================================
+   Abgeleitet vom Design der SANNIS Blogseiten
+   (Referenz: sannis.at/wissen/blog/leinoel-gesund/)
+   Gleiche Tokens, gleiche Bausteine: Karten, Kapsel-Zitat,
+   Produkt-CTA in Violett, FAQ ohne Kasten, Autorenbox.
+   ============================================================ */
+.sn-wrap{
+  --sn-purple:#442768; --sn-purple-700:#3a2059; --sn-purple-300:#9182A5;
+  --sn-lav-50:#FAF9FC; --sn-lav-100:#F7F6FA; --sn-lav-200:#EFEAF5;
+  --sn-ink:#211B2E; --sn-ink-soft:#4A4358; --sn-line:#E7E2EF;
+  --sn-gold:#C9982E; --sn-radius:16px;
+  --sn-head:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--sn-ink); font-size:18px; line-height:1.72; max-width:100%;
+}
+.sn-wrap *{box-sizing:border-box}
+.sn-wrap h2,.sn-wrap h3,.sn-wrap h4{font-family:var(--sn-head);line-height:1.25;color:var(--sn-ink)}
+.sn-wrap h2{font-size:clamp(23px,3vw,31px);margin:48px 0 6px;font-weight:700}
+.sn-wrap h3{font-size:20px;margin:30px 0 4px;font-weight:600}
+.sn-wrap .sn-accent{color:var(--sn-purple)}
+.sn-wrap p{margin:18px 0}
+/* Textlinks sind IMMER unterstrichen, ueberall im Block.
+   Ausgenommen sind nur Elemente, die als Flaeche funktionieren:
+   Buttons (.sn-btn) und die Produktkacheln (.sn-tile). */
+.sn-wrap a{color:var(--sn-purple);text-decoration:underline;
+  text-underline-offset:2px;text-decoration-thickness:1px}
+.sn-wrap a:hover{color:var(--sn-purple-700)}
+.sn-wrap a.sn-btn,.sn-wrap a.sn-tile{text-decoration:none}
+.sn-wrap a.sn-btn:hover,.sn-wrap a.sn-tile:hover{text-decoration:none}
+.sn-wrap img{max-width:100%;display:block}
+.sn-sec{margin:0}
+
+/* Intro, entspricht .lead im Blog: kein Rand, nur groesserer Text */
+.sn-lead{font-size:21px;color:var(--sn-ink-soft);line-height:1.65;margin:8px 0 26px}
+
+/* Bewertungskarten, entspricht .compare .card */
+.sn-rev3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch;
+  /* Ausbruch aus der Textspalte, damit drei Karten Platz haben.
+     Im Blog macht das der Hero genauso (1180px statt 760px Textbreite). */
+  width:min(1080px,calc(100vw - 44px));margin:26px 0;margin-left:50%;transform:translateX(-50%)}
+@media(max-width:1180px){.sn-rev3,.sn-quotes,.sn-tiles{width:min(100%,calc(100vw - 44px))}}
+@media(max-width:860px){.sn-rev3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+  .sn-rev3,.sn-quotes,.sn-tiles{width:auto;margin-left:0;margin-right:0;transform:none}
+  .sn-rev3{grid-template-columns:1fr}
+}
+.sn-rc{border:1px solid var(--sn-line);border-radius:var(--sn-radius);padding:22px 24px;
+  background:#fff;display:flex;flex-direction:column;min-width:0}
+/* alle drei Quellenkarten sind optisch gleichwertig, kein Sonderstil */
+.sn-rh{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+.sn-mark{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:18px;flex:none}
+.sn-mark.ts{background:#FFDC0F;color:#1c1c1c}
+.sn-mark.g{background:#fff;border:1px solid var(--sn-line);color:#4285F4;font-size:20px}
+.sn-mark.own{background:var(--sn-purple);color:#fff;font-size:16px}
+.sn-rh .sn-t{font-family:var(--sn-head);font-weight:600;font-size:16px;line-height:1.25;
+  overflow-wrap:normal;word-break:normal;hyphens:none}
+.sn-rh .sn-t span{display:block;font-family:inherit;font-weight:400;font-size:13.5px;
+  color:var(--sn-ink-soft);margin-top:2px}
+.sn-score{display:flex;align-items:baseline;gap:9px;min-width:0;white-space:nowrap}
+.sn-score b{font-family:var(--sn-head);font-size:34px;color:var(--sn-purple);font-weight:700;line-height:1}
+.sn-score em{font-style:normal;font-size:14px;color:var(--sn-ink-soft)}
+.sn-star{color:var(--sn-gold);letter-spacing:2px;font-size:15px;white-space:nowrap}
+.sn-base{font-size:14px;color:var(--sn-ink-soft);margin:8px 0 16px;line-height:1.5}
+.sn-crit{display:grid;gap:7px;margin:0 0 16px;padding:12px 14px;
+  background:var(--sn-lav-100);border-radius:12px}
+.sn-crit div{display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--sn-ink-soft);
+  min-width:0;white-space:nowrap}
+.sn-crit div span:first-child{flex:1 1 auto;min-width:0}
+.sn-crit b{font-family:var(--sn-head);color:var(--sn-purple);font-size:15px}
+.sn-dist{margin:0 0 16px}
+.sn-dist div{display:flex;align-items:center;gap:9px;font-size:13px;
+  color:var(--sn-ink-soft);margin-bottom:5px;min-width:0}
+.sn-dist i{display:block;height:7px;background:var(--sn-lav-200);border-radius:99px;flex:1 1 0;min-width:0;overflow:hidden}
+.sn-dist i u{display:block;height:100%;background:var(--sn-gold);border-radius:99px}
+.sn-dist span:last-child{min-width:34px;text-align:right}
+.sn-dist .sn-total{border-top:1px solid var(--sn-line);margin-top:9px;padding-top:9px;
+  font-weight:600;color:var(--sn-ink)}
+.sn-dist .sn-total span:first-child{flex:1}
+.sn-rlink{display:block;text-align:center;border-top:1px solid var(--sn-line);
+  padding-top:14px;margin-top:auto;font-size:14.5px;font-weight:600;font-family:var(--sn-head)}
+.sn-hint{text-align:center;margin:14px 0 0!important}
+.sn-wrap .sn-hint a.sn-btn{margin:0;padding:11px 20px;font-size:14.5px}
+
+/* Themen, entspricht .takeaways */
+.sn-themes{background:linear-gradient(180deg,#fff,var(--sn-lav-50));border:1px solid var(--sn-line);
+  border-radius:var(--sn-radius);padding:26px 28px;margin:30px 0;
+  box-shadow:0 10px 30px -20px rgba(68,39,104,.4)}
+.sn-th{padding:20px 0;border-bottom:1px solid var(--sn-line)}
+.sn-th:first-child{padding-top:0}
+.sn-th:last-child{border-bottom:0;padding-bottom:0}
+.sn-th h3{margin:0 0 2px;font-size:19px}
+.sn-th .sn-cnt{font-size:13.5px;color:var(--sn-purple-300);display:block;margin-bottom:10px}
+.sn-th p{margin:0 0 12px;font-size:16.5px;color:var(--sn-ink-soft)}
+.sn-th .sn-mini{display:inline-flex;align-items:baseline;gap:7px;margin-left:10px}
+.sn-th .sn-mini b{font-family:var(--sn-head);color:var(--sn-purple);font-size:16px}
+
+/* Zitat, entspricht .capsule */
+.sn-cap{border-left:4px solid var(--sn-gold);background:#fffdf6;padding:16px 20px;
+  border-radius:0 12px 12px 0;margin:0;font-size:17px;font-style:italic;color:var(--sn-ink)}
+.sn-cap cite{display:block;font-style:normal;font-size:13.5px;
+  color:var(--sn-ink-soft);margin-top:8px}
+.sn-cap cite a{font-size:13px}
+
+/* Tabs */
+.sn-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 24px;padding:0;list-style:none}
+.sn-tab{font:inherit;font-family:var(--sn-head);font-size:13px;font-weight:600;letter-spacing:.4px;
+  padding:9px 18px;border-radius:50px;border:1px solid var(--sn-line);background:#fff;
+  color:var(--sn-ink-soft);cursor:pointer;line-height:1.3}
+.sn-tab b{color:var(--sn-purple-300);margin-left:6px}
+.sn-tab:hover{border-color:var(--sn-purple-300)}
+.sn-tab[aria-selected="true"]{background:var(--sn-purple);color:#fff;border-color:var(--sn-purple)}
+.sn-tab[aria-selected="true"] b{color:rgba(255,255,255,.7)}
+.sn-pane[hidden]{display:none}
+
+/* Zitatkarten in den Tabs, entspricht .compare .card */
+.sn-quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;
+  width:min(980px,calc(100vw - 44px));margin:20px 0 26px;margin-left:50%;transform:translateX(-50%)}
+@media(max-width:860px){.sn-quotes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.sn-quotes{grid-template-columns:1fr}}
+.sn-q{border:1px solid var(--sn-line);border-radius:var(--sn-radius);padding:20px 22px;
+  background:#fff;display:flex;flex-direction:column;min-width:0}
+.sn-q blockquote{margin:10px 0 14px;font-size:15.5px;font-style:italic;line-height:1.6;flex:1}
+.sn-q .sn-by{font-size:13.5px;color:var(--sn-ink-soft);border-top:1px solid var(--sn-line);padding-top:12px}
+.sn-q .sn-by a{font-size:13px;color:var(--sn-purple-300)}
+
+/* Produkt-CTA, entspricht .cta-product */
+.sn-cta{display:flex;gap:22px;align-items:center;background:var(--sn-purple);color:#fff;
+  border-radius:20px;padding:26px 30px;margin:26px 0 0;flex-wrap:wrap}
+.sn-cta .sn-txt{flex:1;min-width:240px}
+.sn-cta p{margin:0;opacity:.9;font-size:16px;color:#fff}
+.sn-cta .sn-shotwrap{flex:0 0 auto;position:relative;padding:6px}
+.sn-cta .sn-shot{width:138px;height:138px;border-radius:20px;overflow:hidden;background:#fff;
+  box-shadow:0 22px 45px -16px rgba(0,0,0,.55),0 4px 12px rgba(0,0,0,.25);
+  transform:rotate(-4deg);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.sn-cta .sn-shot img{width:100%;height:100%;object-fit:cover}
+.sn-cta:hover .sn-shot{transform:rotate(0deg) scale(1.04)}
+.sn-cta .sn-badge{position:absolute;top:-4px;right:-6px;background:var(--sn-gold);color:#fff;
+  font-family:var(--sn-head);font-weight:700;font-size:12px;padding:7px 12px;border-radius:50px;
+  box-shadow:0 6px 16px rgba(0,0,0,.3);transform:rotate(6deg)}
+@media(max-width:560px){
+  .sn-cta{justify-content:center;text-align:center}
+  .sn-cta .sn-txt{min-width:100%}
+  .sn-cta .sn-shotwrap{margin:0 auto}
+}
+.sn-wrap a.sn-btn{display:inline-flex;align-items:center;gap:9px;background:#fff;
+  color:var(--sn-purple);font-family:var(--sn-head);font-weight:600;padding:13px 24px;
+  border-radius:50px;font-size:15px;white-space:nowrap;margin:14px 10px 0 0;
+  transition:transform .15s ease;text-decoration:none}
+.sn-wrap a.sn-btn:hover{text-decoration:none;transform:translateY(-2px);color:var(--sn-purple)}
+.sn-wrap a.sn-btn.sn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6)}
+/* Gefuellte Variante fuer helle Flaechen (Autorenbox) */
+.sn-wrap a.sn-btn.sn-solid{background:var(--sn-purple);color:#fff}
+.sn-wrap a.sn-btn.sn-solid:hover{background:var(--sn-purple-700);color:#fff}
+.sn-wrap a.sn-btn.sn-ghost:hover{color:#fff}
+
+/* FAQ, entspricht .faq im Blog: kein Kasten, nur Trennlinien */
+.sn-faq{margin:24px 0 38px}
+.sn-faq details{border-bottom:1px solid var(--sn-line);padding:6px 0}
+.sn-faq summary{cursor:pointer;font-family:var(--sn-head);font-weight:600;font-size:18px;
+  padding:16px 30px 16px 0;list-style:none;position:relative;color:var(--sn-ink)}
+.sn-faq summary::-webkit-details-marker{display:none}
+.sn-faq summary::after{content:"+";position:absolute;right:4px;top:14px;font-size:24px;
+  color:var(--sn-purple);font-weight:400;transition:transform .2s}
+.sn-faq details[open] summary::after{transform:rotate(45deg)}
+.sn-faq .sn-a{margin:0 0 16px;color:var(--sn-ink-soft);font-size:16.5px}
+
+/* Produktkacheln */
+.sn-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;
+  width:min(980px,calc(100vw - 44px));margin:26px 0;margin-left:50%;transform:translateX(-50%)}
+@media(max-width:860px){.sn-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.sn-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sn-tile{border:1px solid var(--sn-line);border-radius:var(--sn-radius);padding:16px;
+  background:#fff;text-align:center;display:block;color:inherit;text-decoration:none}
+.sn-tile:hover{border-color:var(--sn-purple);box-shadow:0 12px 30px -22px rgba(68,39,104,.6);text-decoration:none}
+.sn-tile img{width:100%;height:auto;border-radius:12px;margin:0 auto 12px}
+.sn-tile .sn-nm{display:block;font-family:var(--sn-head);font-weight:600;font-size:14.5px;line-height:1.35}
+.sn-tile .sn-s{display:block;font-size:13px;color:var(--sn-purple-300);margin-top:5px}
+.sn-more{text-align:center;font-size:16px;color:var(--sn-ink-soft)}
+/* Kategorie-Chips: das ganze Sortiment auf einen Blick */
+.sn-cats{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 26px}
+.sn-wrap .sn-cats a{display:inline-block;border:1px solid var(--sn-line);border-radius:50px;
+  padding:9px 18px;font-size:14.5px;background:#fff;text-decoration:none;color:var(--sn-ink)}
+.sn-wrap .sn-cats a:hover{border-color:var(--sn-purple);color:var(--sn-purple);
+  box-shadow:0 12px 30px -22px rgba(68,39,104,.6);text-decoration:none}
+
+/* Sprunglink zum Kommentarformular */
+.sn-jump{text-align:center;background:var(--sn-lav-50);border:1px solid var(--sn-line);
+  border-radius:var(--sn-radius);padding:24px 22px;margin:34px 0}
+.sn-jump p{margin:0 0 14px;font-family:var(--sn-head);font-weight:600;font-size:18px;
+  color:var(--sn-ink)}
+.sn-wrap .sn-jump a.sn-btn{margin:0}
+
+/* Autorenbox, entspricht .author */
+.sn-author{display:flex;gap:20px;align-items:flex-start;background:var(--sn-lav-50);
+  border:1px solid var(--sn-line);border-radius:var(--sn-radius);padding:24px 26px;margin:36px 0}
+.sn-author .sn-av{width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;
+  box-shadow:0 6px 16px -6px rgba(68,39,104,.6);border:2px solid #fff}
+.sn-author .sn-meta{font-size:16.5px;color:var(--sn-ink-soft)}
+.sn-author .sn-meta p{margin:0 0 14px}
+.sn-author .sn-invite-line{margin:0 0 18px}
+.sn-author .sn-sign{border-top:1px solid var(--sn-line);padding-top:14px;font-size:14.5px;margin:0}
+.sn-author .sn-sign strong{display:block;color:var(--sn-ink);font-size:16px;margin-bottom:2px;
+  font-family:var(--sn-head)}
+@media(max-width:600px){.sn-author{flex-direction:column;align-items:center;text-align:center}}
+
+/* Trust-Pills, entspricht .trust-row */
+.sn-pills{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0;justify-content:center}
+.sn-pills .sn-pill{font-size:13px;color:var(--sn-ink-soft);background:var(--sn-lav-50);
+  border:1px solid var(--sn-line);padding:8px 16px;border-radius:50px;display:flex;
+  align-items:center;gap:8px}
+.sn-pills .sn-pill b{color:var(--sn-purple);font-family:var(--sn-head)}
+
+
+/* Rechtlicher Hinweis als Fussnote ganz am Seitenende */
+.sn-note{border-top:1px solid var(--sn-line);padding:16px 0 0;margin:38px 0 0;
+  font-size:13.5px;color:var(--sn-ink-soft);line-height:1.6}
+.sn-note strong{color:var(--sn-ink)}
+.sn-stamp{font-size:13.5px;color:var(--sn-ink-soft);margin:16px 0 0;text-align:center}
+
+/* Aufklappbare Kommentarliste: nur die drei juengsten Threads sichtbar */
+.sn-hidden{display:none}
+.sn-open{display:block;margin:6px auto 34px;background:none;border:0;padding:10px 4px;
+  color:var(--sn-purple);font-family:inherit;font-size:16.5px;font-weight:600;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.sn-open:hover{color:var(--sn-purple-700)}
+.sn-open::after{content:" ›";text-decoration:none;display:inline-block}
+</style>
+
+
+<div class="sn-wrap">
+
+  <!-- ---------- Einstieg ---------- -->
+  <section class="sn-sec">
+    <p class="sn-lead">Hier finden Sie alle Erfahrungen und Rückmeldungen zu unseren
+    <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-leinoel/">Bio-Leinöl Genussprodukten</a>, zu
+    <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-pestos/">Bio-Pestos</a>,
+    <a target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinsamen-geschrotet-300g/">geschroteten Leinsamen</a>,
+    <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/nuesse-samen/">Nüssen und Samen</a> sowie zu
+    <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/sannis-skin-food/">SANNIS Skin Food</a>, unserer naturinspirierten
+    Kosmetik aus derselben Manufaktur, die viele auch als Sani Skin oder Saniskin kennen. Gesammelt
+    seit 2015, ungefiltert und in der Reihenfolge des Eingangs.</p>
+
+  </section>
+
+  <!-- ---------- Bewertungen im Detail (Nachbau, kein Widget) ---------- -->
+  <section class="sn-sec">
+    <h2>Alle Bewertungen auf einen Blick</h2>
+    <p>Über 800 Rückmeldungen aus drei Quellen. Die ersten beiden werden nach dem Kauf unabhängig
+    eingesammelt und sind öffentlich einsehbar, die dritte schreiben Sie direkt hier.</p>
+
+    <div class="sn-rev3">
+
+      <div class="sn-rc">
+        <div class="sn-rh">
+          <span class="sn-mark ts">&#10003;</span>
+          <span class="sn-t">Trusted Shops<span>Käuferschutz und Bewertungen</span></span>
+        </div>
+        <div class="sn-score"><b>4,99</b><span class="sn-star">★★★★★</span><em>von 5,00</em></div>
+        <p class="sn-base">aus den Bewertungen der letzten 12 Monate, über 700 insgesamt seit 2021</p>
+
+        <div class="sn-crit">
+          <div><span>Lieferung</span><b>4,99</b><span class="sn-star">★★★★★</span></div>
+          <div><span>Ware</span><b>4,99</b><span class="sn-star">★★★★★</span></div>
+          <div><span>Kundenservice</span><b>4,99</b><span class="sn-star">★★★★★</span></div>
+        </div>
+
+        <div class="sn-dist">
+          <div><span>5 Sterne</span><i><u style="width:98.7%"></u></i><span>99 %</span></div>
+          <div><span>4 Sterne</span><i><u style="width:1.3%"></u></i><span>1 %</span></div>
+          <div><span>3 Sterne</span><i><u style="width:0"></u></i><span>0 %</span></div>
+          <div><span>2 Sterne</span><i><u style="width:0"></u></i><span>0 %</span></div>
+          <div><span>1 Stern</span><i><u style="width:0"></u></i><span>0 %</span></div>
+        </div>
+
+        <a class="sn-rlink" href="https://www.trustedshops.at/bewertung/info_X2BF29CDD4CC91AEF99401BCF4D89A551.html" target="_blank" rel="noopener">Alle Bewertungen bei Trusted Shops lesen</a>
+      </div>
+
+      <div class="sn-rc">
+        <div class="sn-rh">
+          <span class="sn-mark g">G</span>
+          <span class="sn-t">Google Rezensionen<span>SANNIS Bio-Leinöl Manufaktur</span></span>
+        </div>
+        <div class="sn-score"><b>5,0</b><span class="sn-star">★★★★★</span><em>von 5,0</em></div>
+        <p class="sn-base">aus über 70 Rezensionen, alle mit der Höchstnote</p>
+
+        <div class="sn-crit">
+          <div><span>Produkte und Qualität</span><b>40+</b><span>Nennungen</span></div>
+          <div><span>Manufaktur und Laden</span><b>10+</b><span>Nennungen</span></div>
+          <div><span>Geschmacksrichtungen</span><b>10+</b><span>Nennungen</span></div>
+        </div>
+
+        <div class="sn-dist">
+          <div><span>5 Sterne</span><i><u style="width:100%"></u></i><span>100 %</span></div>
+          <div><span>4 Sterne</span><i><u style="width:0"></u></i><span>0 %</span></div>
+          <div><span>3 Sterne</span><i><u style="width:0"></u></i><span>0 %</span></div>
+          <div><span>2 Sterne</span><i><u style="width:0"></u></i><span>0 %</span></div>
+          <div><span>1 Stern</span><i><u style="width:0"></u></i><span>0 %</span></div>
+        </div>
+
+        <!-- TODO Laura: durch den offiziellen Kurzlink aus dem Google Business Profil
+             ersetzen (Profil > Profil teilen). Der Link unten funktioniert, ist aber
+             eine Suchanfrage und damit weniger stabil. -->
+        <a class="sn-rlink" href="https://www.google.com/search?q=SANNIS+Bio-Lein%C3%B6l+Manufaktur+Rezensionen" target="_blank" rel="noopener">Alle Rezensionen bei Google lesen</a>
+      </div>
+
+      <div class="sn-rc">
+        <div class="sn-rh">
+          <span class="sn-mark own">&#9998;</span>
+          <span class="sn-t">Erfahrungsberichte<span>direkt auf dieser Seite</span></span>
+        </div>
+        <div class="sn-score"><b data-sn-count>33</b><em>Kundenstimmen</em></div>
+        <p class="sn-base">seit Februar 2015, ungefiltert und in der Reihenfolge des Eingangs</p>
+
+        <div class="sn-crit">
+          <div><span>Bio-Leinöl</span><b>20+</b><span>Berichte</span></div>
+          <div><span>Skin Food</span><b>10+</b><span>Berichte</span></div>
+          <div><span>Sonnenblumenkerne</span><b>5+</b><span>Berichte</span></div>
+        </div>
+
+        <a class="sn-rlink" href="#comments">Alle Erfahrungsberichte lesen</a>
+        <p class="sn-hint"><a class="sn-btn sn-solid" href="#respond">Erfahrung schreiben</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ---------- Themen ---------- -->
+  <section class="sn-sec">
+    <h2>Worauf es unseren Kundinnen und Kunden ankommt</h2>
+    <p>Vier Themen kommen immer wieder vor, quer über alle Quellen.</p>
+
+    <div class="sn-themes">
+      <div class="sn-th">
+        <h3>Geschmack</h3>
+        <span class="sn-cnt">über 40 Nennungen</span>
+        <p>Mild, nussig und nicht bitter. Das ist das Thema, das am häufigsten vorkommt, und fast immer im Vergleich zu anderem Leinöl.</p>
+        <blockquote class="sn-cap">„Das Sannis Bio Leinöl ist mega und schmeckt nicht bitter oder ranzig, wie so viele.“<cite>Sabine S., Google Rezension</cite></blockquote>
+      </div>
+
+      <div class="sn-th">
+        <h3>Täglich im Gebrauch</h3>
+        <span class="sn-cnt">über 40 Nennungen</span>
+        <p>Sehr viele schreiben, dass sie das Öl jeden Morgen verwenden, seit Jahren nachkaufen oder ein Abo haben.</p>
+        <blockquote class="sn-cap">„Ich habe seit drei Jahren ein Abo und bin damit sehr glücklich. Das Leinöl gehört für mich täglich in der Küche dazu.“<cite>Manuela A., Google Rezension</cite></blockquote>
+      </div>
+
+      <div class="sn-th">
+        <h3>Lieferung</h3>
+        <span class="sn-cnt">über 40 Nennungen<span class="sn-mini"><b>4,99</b> <span class="sn-star">★★★★★</span></span><br><span class="sn-cnt" style="margin:0">Teilnote Lieferung bei Trusted Shops</span></span>
+        <p>Frisch gepresst und schnell verschickt. Die Teilnote für die Lieferung wird von Trusted Shops getrennt erhoben.</p>
+        <blockquote class="sn-cap">„Ganz tolles Öl, super Geschmack und die Lieferung war innerhalb von 2 Tagen da.“<cite>T. M., Google Rezension</cite></blockquote>
+      </div>
+
+      <div class="sn-th">
+        <h3>Geschmacksrichtungen</h3>
+        <span class="sn-cnt">fast 20 Nennungen</span>
+        <p>Zimt wird am häufigsten genannt, danach Kokos, Kurkuma, Ingwer, Rosmarin und Basilikum. Viele nennen ausdrücklich einen Favoriten.</p>
+        <blockquote class="sn-cap">„Einzigartig sind die unterschiedlichen Geschmacksrichtungen, meine Favoriten sind Kokos und Ingwer.“<cite>Christine H., Google Rezension</cite></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Sprunglink zum Formular ---------- -->
+  <div class="sn-jump">
+    <p>Sie haben SANNIS schon probiert?</p>
+    <a class="sn-btn sn-solid" href="#respond">Ihre Erfahrung schreiben</a>
+  </div>
+
+  <!-- ---------- Erfahrungen nach Produkt ---------- -->
+  <section class="sn-sec">
+    <h2>Erfahrungen nach Produkt</h2>
+
+    <div class="sn-tabs" role="tablist">
+      <button class="sn-tab" role="tab" aria-selected="true"  aria-controls="sn-p1" id="sn-t1">Bio-Leinöl extra nativ <b>84</b></button>
+      <button class="sn-tab" role="tab" aria-selected="false" aria-controls="sn-p4" id="sn-t4">Skin Food Pflege <b>13</b></button>
+      <button class="sn-tab" role="tab" aria-selected="false" aria-controls="sn-p5" id="sn-t5">Skin Food Peeling <b>10</b></button>
+      <button class="sn-tab" role="tab" aria-selected="false" aria-controls="sn-p2" id="sn-t2">Bio-Leinöl in 10 Geschmacksrichtungen <b>18</b></button>
+      <button class="sn-tab" role="tab" aria-selected="false" aria-controls="sn-p3" id="sn-t3">Manufaktur vor Ort <b>14</b></button>
+      <button class="sn-tab" role="tab" aria-selected="false" aria-controls="sn-p6" id="sn-t6">Bio-Sonnenblumenkerne <b>6</b></button>
+      <button class="sn-tab" role="tab" aria-selected="false" aria-controls="sn-p7" id="sn-t7">Tierfütterung <b>2</b></button>
+    </div>
+
+    <div class="sn-pane" id="sn-p1" role="tabpanel" aria-labelledby="sn-t1">
+      <h3>Erfahrungen mit SANNIS Bio-Leinöl extra nativ</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Das Sannis Bio Leinöl ist mega und schmeckt nicht bitter oder ranzig, wie so viele.“</blockquote><div class="sn-by">Sabine S., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Da schmeckt man die Natur heraus und ist überhaupt nicht bitter gewesen.“</blockquote><div class="sn-by">Karin S., 2016<br><a href="#comment-180">Kommentar im Original ansehen</a></div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Sannis Leinöl ist angenehm mild, leicht nussig und qualitativ hochwertig.“</blockquote><div class="sn-by">Maria B., Google Rezension</div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2026/01/SANNIS-Nativ-250-ml-scaled-1-1022x1024.webp" alt="SANNIS Bio-Leinöl extra nativ, 250 ml Glasflasche" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Der Geschmack ist das Thema, das am häufigsten vorkommt: mild, nussig und nicht bitter. Unser Bio-Leinöl wird in Vorarlberg kaltgepresst und frischgepresst versendet.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinoel-extra-nativ/">Bio-Leinöl extra nativ 250 ml</a><a class="sn-btn sn-ghost" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinoel-extra-nativ-500ml/">500 ml Flasche</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pane" id="sn-p2" role="tabpanel" aria-labelledby="sn-t2" hidden>
+      <h3>Erfahrungen mit dem Bio-Leinöl in 10 Geschmacksrichtungen</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Euer Bio-Leinöl mit Zimt ist ein absoluter Hit, mein Müsli wird täglich damit verfeinert. Ein weiterer Favorit ist das Bio-Leinöl mit Rosmarin, perfekt für Salatdressings.“</blockquote><div class="sn-by">Christine A., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Das Kokosleinöl hat einen feinen Geschmack, auch das Zimtöl und Kurkuma sind fein im Aroma. Alles in Top Qualität.“</blockquote><div class="sn-by">Kerstin S., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Wir haben beinahe alle eure Sorten probiert und sind von dem tollen weichen Geschmack begeistert.“</blockquote><div class="sn-by">Hannes P., 2020<br><a href="#comment-3021">Kommentar im Original ansehen</a></div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2026/01/SANNIS-Zimt-500-ml-scaled-1-1020x1024.webp" alt="SANNIS Bio-Leinöl mit Zimt, eine von zehn Geschmacksrichtungen" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Zimt, Chili, Kurkuma, Ingwer, Kardamom, Sternanis, Rosmarin, Kokos, Basilikum und Vanille: zehn Geschmacksrichtungen auf Basis desselben Bio-Leinöls. Am häufigsten genannt wird Zimt, danach Kokos, Kurkuma und Ingwer.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-leinoel/">Alle Geschmacksrichtungen ansehen</a><a class="sn-btn sn-ghost" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinol-mit-zimt-500ml/">Sorte Zimt</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pane" id="sn-p3" role="tabpanel" aria-labelledby="sn-t3" hidden>
+      <h3>Die Manufaktur und der Laden in Wald am Arlberg</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Tolles Geschäft, sehr freundlich. Aber das allerbeste sind die tollen Produkte. Das Leinöl genieße ich jeden Tag und die Würzöle passen perfekt zu Nudeln.“</blockquote><div class="sn-by">Margit H., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Die Menschen bei Sannis sind sehr freundlich und du merkst, dass die Öle mit Leidenschaft gemacht werden, und das macht den Unterschied, den du auch schmeckst.“</blockquote><div class="sn-by">Erich U., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„In Vorarlberg hergestellt, kann ich es mit gutem Gewissen kaufen und bekomme eine Qualität, welche keine Wünsche offen lässt.“</blockquote><div class="sn-by">Michaela S., Google Rezension</div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2024/10/Bild-neu-2-1.jpg" alt="Die SANNIS Alpin Manufaktur in Wald am Arlberg" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Die Manufaktur steht in Wald am Arlberg in Vorarlberg. Wer nicht online bestellt, findet die Produkte bei über hundert Handelspartnern in Österreich, Deutschland und der Schweiz.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/manufaktur/">Die Manufaktur ansehen</a><a class="sn-btn sn-ghost" target="_blank" rel="noopener" href="https://sannis.at/vertriebspartner/">Vertriebspartner finden</a><a class="sn-btn sn-ghost" target="_blank" rel="noopener" href="https://sannis.at/zertifizierungen/">Zertifizierungen</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pane" id="sn-p4" role="tabpanel" aria-labelledby="sn-t4" hidden>
+      <h3>Leinöl für Haut und Gesicht: Erfahrungen mit der Skin Food Pflege</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Ich verwende das Körperöl und das Augenöl regelmäßig und bin wirklich begeistert. Das Körperöl ist besonders nach der Sauna ein Traum.“</blockquote><div class="sn-by">Dani D., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Was mich besonders begeistert sind das Peeling, der Lippenbalsam und die neuen Kosmetik Öle.“</blockquote><div class="sn-by">Jasmin G., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Bin begeistert von den hochwertigen Ölen und von der Kosmetiklinie. Endlich ein passendes Produkt für meine Mischhaut.“</blockquote><div class="sn-by">Michaela S., Google Rezension</div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2026/01/A03-Body-1-1024x1024.webp" alt="SANNIS Skin Food Körperöl 30 ml" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Dasselbe kaltgepresste Bio-Leinöl, das bei uns auf dem Teller landet, ist die Basis der Skin Food Pflege. Genannt werden vor allem Körperöl, Augenöl, Lippenbalsam und Nachtcreme, also Leinöl auf der Haut und im Gesicht.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/sannis-skin-food/">Skin Food Sortiment</a><a class="sn-btn sn-ghost" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-skin-food-koerperoel-30-ml/">Körperöl</a><a class="sn-btn sn-ghost" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-skin-food-lippenbalsam/">Lippenbalsam</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pane" id="sn-p5" role="tabpanel" aria-labelledby="sn-t5" hidden>
+      <h3>Erfahrungen mit dem SANNIS Skin Food Peeling</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Das Peeling ist wirklich toll für raue Hände. Ich benutze es seit 2 Wochen und meine Hände fühlen sich samt und geschmeidig an.“</blockquote><div class="sn-by">Saša, 2024<br><a href="#comment-14437">Kommentar im Original ansehen</a></div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Im Gegensatz zu anderen riecht es traumhaft und lässt die Haut geschmeidig zurück.“</blockquote><div class="sn-by">Martina M., 2024<br><a href="#comment-13524">Kommentar im Original ansehen</a></div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Das Peeling ist angenehm auf der Haut, entfernt sanft abgestorbene Hautzellen und hinterlässt ein wunderbares Gefühl.“</blockquote><div class="sn-by">Hana S., Google Rezension</div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2026/01/Peeling-1-1024x1024.webp" alt="SANNIS Skin Food Peeling im Glastiegel" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Genannt werden vor allem der Duft und das Hautgefühl nach der Anwendung.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-skin-food-peeling/">Skin Food Peeling ansehen</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pane" id="sn-p6" role="tabpanel" aria-labelledby="sn-t6" hidden>
+      <h3>Erfahrungen mit den Bio-Sonnenblumenkernen</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Auch die Sonnenblumenkerne kaufe ich immer wieder nach, es sind die Besten!“</blockquote><div class="sn-by">Melanie S., Google Rezension</div></div>
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„…pur am Morgen auf den nüchternen Magen oder für den Salat, jeweils nach Ihrer Vorgabe mit Sonnenblumenkernen.“</blockquote><div class="sn-by">Peter M., 2015<br><a href="#comment-12">Kommentar im Original ansehen</a></div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2026/01/Sonnenblumenkerne_02.webp" alt="SANNIS Bio-Sonnenblumenkerne im 320 g Glas" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Die Kerne werden fast immer zusammen mit dem Leinöl genannt, nie allein.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-sonnenblumenkerne-320g-glas/">Bio-Sonnenblumenkerne ansehen</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pane" id="sn-p7" role="tabpanel" aria-labelledby="sn-t7" hidden>
+      <h3>Erfahrungen aus der Tierfütterung</h3>
+      <div class="sn-quotes">
+        <div class="sn-q"><span class="sn-star">★★★★★</span><blockquote>„Unsere Pferde und unser Hund bekommen täglich Leinöl bzw. die Pferde eine kleine Handvoll Leinöl-Pellets.“</blockquote><div class="sn-by">Nina, 2022<br><a href="#comment-7811">Kommentar im Original ansehen</a></div></div>
+      </div>
+      <div class="sn-cta">
+        <div class="sn-shotwrap"><div class="sn-shot"><img src="https://sannis.at/wp-content/uploads/2021/04/02-Sannis-Bioleinoel-Pellets-1024x1024.jpg" alt="SANNIS Bio-Leinsamen-Pellets für Pferde und Hunde" loading="lazy"></div></div>
+        <div class="sn-txt">
+          <p>Leinöl und Leinsamen-Pellets sind bei Pferde- und Hundehaltern ein Thema, auf dieser Seite ist es bisher kaum abgebildet.</p>
+          <a class="sn-btn" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinsamen-pellets/">Bio-Leinsamen-Pellets ansehen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Frank Nessler, Danksagung ---------- -->
+  <section class="sn-sec">
+    <h2>Ein Wort von Frank Nessler</h2>
+    <div class="sn-author">
+      <img class="sn-av" src="https://sannis.at/wp-content/uploads/2026/08/frank-nessler.webp"
+           alt="Frank Nessler, Gründer der SANNIS Alpin Manufaktur" width="480" height="480" loading="lazy">
+      <div class="sn-meta">
+        <p>Über 800 Rückmeldungen, und ich lese jede einzelne. Die ersten davon sind aus dem Jahr 2015.
+        Was mich am meisten freut, ist nicht die Note, sondern dass daraus über die Jahre echte Fans
+        geworden sind: Menschen, die unser Leinöl täglich im Haus haben und uns weiterempfehlen.</p>
+        <p>Wir nehmen jede Rückmeldung ernst, gerade die kritischen. Sie sind der Grund, warum wir
+        unsere Flasche und den Verschluss weiterentwickelt haben, warum es heute zehn
+        Geschmacksrichtungen gibt und warum das Sortiment Schritt für Schritt wächst. Wenn Ihnen
+        etwas fehlt oder etwas nicht passt, schreiben Sie es uns. Genau dafür ist diese Seite da.</p>
+        <p class="sn-invite-line"><a class="sn-btn sn-solid" href="#respond">Ihre Erfahrung schreiben</a></p>
+        <p class="sn-sign"><strong>Frank Nessler</strong><br>
+        Gründer der SANNIS Alpin Manufaktur<br>
+        <span>SANNIS ist eine Alpin Manufaktur aus Wald am Arlberg, Vorarlberg. Wir pressen Bio-Leinöl
+        schonend unter 29 °C in kleinen Chargen. Austria Bio zertifiziert (AT-BIO-301).</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- FAQ ---------- -->
+  <section class="sn-sec sn-faq">
+    <h2>Häufige Fragen zu unseren Produkten</h2>
+
+    <details open><summary>Was bedeutet Skin Food?</summary>
+      <div class="sn-a">Wörtlich übersetzt Nahrung für die Haut. In der Kosmetik steht der Begriff für Pflege mit nährenden pflanzlichen Ölen statt mit Mineralöl. Bei SANNIS ist er wörtlich zu nehmen: Dasselbe Bio-Leinöl steckt in unseren Lebensmitteln und in unserer Pflege.</div></details>
+
+    <details><summary>Heißt es Sani Skin, Saniskin oder SANNIS Skin Food?</summary>
+      <div class="sn-a">Gemeint ist immer <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/sannis-skin-food/">SANNIS Skin Food</a>, unsere naturinspirierte Kosmetik auf Basis von Bio-Leinöl. Viele suchen die Pflegelinie unter Sani Skin oder Saniskin, das sind gebräuchliche Schreibweisen unseres Markennamens.</div></details>
+
+    <details><summary>Kann man Leinöl im Gesicht verwenden?</summary>
+      <div class="sn-a">Ja. Leinöl ist Bestandteil unserer Skin Food Pflege, etwa im <a target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-skin-food-koerperoel-30-ml/">Körperöl</a>, im Augenöl und in der Nachtcreme. Für die Anwendung im Gesicht verwenden wir es in abgestimmten Rezepturen statt pur.</div></details>
+
+    <details><summary>Schmeckt Leinöl bitter?</summary>
+      <div class="sn-a">Das SANNIS Bio-Leinöl schmeckt mild und nussig durch die schonende Pressung unter 29 °C. Bitterkeit entsteht in der Regel erst, wenn Leinöl zu heiß gepresst wird oder schon älter ist. Das ist der Punkt, der in den Rückmeldungen am häufigsten vorkommt, fast immer im Vergleich zu anderem Leinöl.</div></details>
+
+    <details><summary>Wie lange ist das Leinöl haltbar?</summary>
+      <div class="sn-a">Das aktuelle Mindesthaltbarkeitsdatum steht immer auf der jeweiligen <a target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinoel-extra-nativ/">Produktseite im Shop</a>, weil es vom Abfülldatum abhängt.</div></details>
+
+    <details><summary>Verwendet ihr Ceylon-Zimt für das Zimt-Leinöl?</summary>
+      <div class="sn-a"><!-- TODO Frank: Sortenangabe ergaenzen. Kundenfrage von Petra aus 2021, seither unbeantwortet. -->Antwort folgt.</div></details>
+
+    <details><summary>Wie nehme ich die Sonnenblumenkerne am besten zu mir?</summary>
+      <div class="sn-a">Die Kerne passen über Salat, ins Müsli, in Joghurt oder zusammen mit Leinöl über Topfen. Sie lassen sich auch kurz in der Pfanne ohne Fett rösten.</div></details>
+
+    <details><summary>Wo bekomme ich SANNIS außer im Onlineshop?</summary>
+      <div class="sn-a">In unserer Manufaktur in Wald am Arlberg und bei über hundert Handelspartnern in Österreich, Deutschland und der Schweiz, von Bio-Läden über Bäckereien bis zu Hotels. Eine vollständige Übersicht nach Bundesland finden Sie bei unseren <a target="_blank" rel="noopener" href="https://sannis.at/vertriebspartner/">Vertriebspartnern</a>.</div></details>
+
+    <details><summary>Gibt es das Leinöl auch im Abo?</summary>
+      <div class="sn-a"><!-- TODO Frank: Gibt es ein Abo? Eine Google-Rezension nennt ein Abo seit drei Jahren. -->Antwort folgt.</div></details>
+
+    <details><summary>Wofür verwende ich welche Geschmacksrichtung?</summary>
+      <div class="sn-a">Zimt passt zu Porridge, Müsli und Süßspeisen. Rosmarin und Basilikum zu Salatdressings, Kokos zum Frühstück, die Würzöle zu Nudeln und herzhaften Gerichten. Alle Geschmacksrichtungen basieren auf demselben Bio-Leinöl.</div></details>
+
+    <details><summary>Kann ich hier selbst eine Erfahrung schreiben?</summary>
+      <div class="sn-a">Ja. Diese Seite ist kein Forum, aber das Kommentarfeld am Ende ist offen und eine Anmeldung ist nicht nötig. Wir veröffentlichen alle sachlichen Rückmeldungen, auch kritische.</div></details>
+  </section>
+
+  <!-- ---------- Cross-Sell ---------- -->
+  <section class="sn-sec">
+    <h2>Unser Sortiment</h2>
+    <p>Diese Produkte kommen in den Erfahrungsberichten am häufigsten vor. Das vollständige Sortiment mit allen Ölen, Lebensmitteln und Pflegeprodukten finden Sie <a target="_blank" rel="noopener" href="https://sannis.at/shop/">im Shop</a>.</p>
+    <div class="sn-tiles">
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinoel-extra-nativ/"><img src="https://sannis.at/wp-content/uploads/2026/01/SANNIS-Nativ-250-ml-scaled-1-1022x1024.webp" alt="SANNIS Bio-Leinöl extra nativ in der 250 ml Glasflasche" width="1022" height="1024" loading="lazy"><span class="sn-nm">Bio-Leinöl extra nativ 250 ml</span><span class="sn-s">meistgenannt</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinoel-extra-nativ-500ml/"><img src="https://sannis.at/wp-content/uploads/2026/01/SANNIS-Nativ-500-ml-scaled-1-1020x1024.webp" alt="SANNIS Bio-Leinöl extra nativ in der 500 ml Vorratsflasche" width="1020" height="1024" loading="lazy"><span class="sn-nm">Bio-Leinöl extra nativ 500 ml</span><span class="sn-s">für Vielverwender</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-leinoel/"><img src="https://sannis.at/wp-content/uploads/2026/01/SANNIS-Zimt-500-ml-scaled-1-1020x1024.webp" alt="SANNIS Bio-Leinöl mit Zimt, eine von zehn Geschmacksrichtungen" width="1020" height="1024" loading="lazy"><span class="sn-nm">Bio-Leinöl in 10 Geschmacksrichtungen</span><span class="sn-s">Zimt am häufigsten genannt</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-skin-food-peeling/"><img src="https://sannis.at/wp-content/uploads/2026/01/Peeling-1-1024x1024.webp" alt="SANNIS Skin Food Peeling im Glastiegel" width="1024" height="1024" loading="lazy"><span class="sn-nm">Skin Food Peeling</span><span class="sn-s">10 Erfahrungen</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-skin-food-koerperoel-30-ml/"><img src="https://sannis.at/wp-content/uploads/2026/01/A03-Body-1-1024x1024.webp" alt="SANNIS Skin Food Körperöl 30 ml" width="1024" height="1024" loading="lazy"><span class="sn-nm">Skin Food Körperöl</span><span class="sn-s">nach der Sauna</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-sonnenblumenkerne-320g-glas/"><img src="https://sannis.at/wp-content/uploads/2026/01/Sonnenblumenkerne_02.webp" alt="SANNIS Bio-Sonnenblumenkerne im 320 g Glas" loading="lazy"><span class="sn-nm">Bio-Sonnenblumenkerne 320 g</span><span class="sn-s">6 Erfahrungen</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-haselnuesse/"><img src="https://sannis.at/wp-content/uploads/2026/01/Nuesse_02-1.webp" alt="SANNIS Bio-Haselnüsse im 310 g Glas" loading="lazy"><span class="sn-nm">Bio-Haselnüsse 310 g</span><span class="sn-s">„riecht fast wie Nutella“</span></a>
+      <a class="sn-tile" target="_blank" rel="noopener" href="https://sannis.at/produkt/sannis-bio-leinsamen-pellets/"><img src="https://sannis.at/wp-content/uploads/2021/04/02-Sannis-Bioleinoel-Pellets-1024x1024.jpg" alt="SANNIS Bio-Leinsamen-Pellets für Pferde und Hunde" width="1024" height="1024" loading="lazy"><span class="sn-nm">Bio-Leinsamen-Pellets</span><span class="sn-s">Tierfütterung</span></a>
+    </div>
+    <h3 style="margin-top:34px">Alle Bereiche im Überblick</h3>
+    <div class="sn-cats">
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-leinoel/">Bio-Leinöl</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/sannis-skin-food/">Skin Food Pflege</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/nuesse-samen/">Nüsse und Samen</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-pestos/">Bio-Pestos</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/bio-getraenke/">Bio-Getränke</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/geschenksets/">Geschenksets</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/produkt-kategorie/wissen-buecher/">Wissen und Bücher</a>
+      <a target="_blank" rel="noopener" href="https://sannis.at/shop/">Alle Produkte</a>
+    </div>
+    <p class="sn-more">Weiterlesen: <a target="_blank" rel="noopener" href="https://sannis.at/wissen/blog/leinoel-gesund/">Ist Leinöl gesund?</a> · <a target="_blank" rel="noopener" href="https://sannis.at/wissen/blog/pflanzliches-omega-3/">Pflanzliches Omega 3</a> · <a target="_blank" rel="noopener" href="https://sannis.at/zertifizierungen/">Unsere Zertifizierungen (AT-BIO-301)</a></p>
+  </section>
+
+  <!-- ---------- Rechtlicher Hinweis (wird per Skript ans Seitenende verschoben) ---------- -->
+  <section class="sn-sec">
+    <p class="sn-note"><strong>Hinweis:</strong> Die Erfahrungsberichte auf dieser Seite geben die
+    persönliche Meinung einzelner Kundinnen und Kunden wieder. Sie sind keine Aussage von SANNIS über
+    die Wirkung unserer Produkte und ersetzen keine ärztliche Beratung. Wir veröffentlichen die
+    Beiträge unverändert und in der Reihenfolge des Eingangs. Stand der Bewertungszahlen: August 2026.</p>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  /* --- Tabs: liegen im Block selbst, koennen sofort laufen --- */
+  var w=document.querySelector('.sn-wrap');
+  if(w){
+    var tabs=w.querySelectorAll('.sn-tab');
+    tabs.forEach(function(t){
+      t.addEventListener('click',function(){
+        tabs.forEach(function(x){
+          x.setAttribute('aria-selected','false');
+          document.getElementById(x.getAttribute('aria-controls')).hidden=true;
+        });
+        t.setAttribute('aria-selected','true');
+        document.getElementById(t.getAttribute('aria-controls')).hidden=false;
+      });
+    });
+  }
+
+  /* --- Kommentarliste ---
+     WICHTIG: Dieser Block steht OBERHALB der Kommentarliste. Zum Zeitpunkt,
+     an dem dieses Skript geparst wird, existiert .comment-list noch nicht.
+     Deshalb erst nach DOMContentLoaded suchen, sonst passiert gar nichts. */
+  /* Rechtlichen Hinweis ans Seitenende verschieben, hinter das Kommentarformular.
+     Der Absatz steht im HTML weiterhin im Block, er wird nur umgehaengt.
+     Faellt JavaScript aus, bleibt er an seiner urspruenglichen Stelle sichtbar,
+     es geht also nichts verloren. */
+  function moveNote(){
+    var note=document.querySelector('.sn-wrap .sn-note');
+    var anchor=document.querySelector('#respond') || document.querySelector('.comment-list');
+    if(note && anchor && anchor.parentNode){
+      anchor.parentNode.insertBefore(note,anchor.nextSibling);
+    }
+  }
+
+  /* Die Zahl in der Karte "Erfahrungsberichte" aus der Liste zaehlen.
+     Jeder Thread auf oberster Ebene ist eine Kundenstimme, unsere Antworten
+     haengen verschachtelt darunter und werden nicht mitgezaehlt.
+     Damit stimmt die Zahl automatisch, sobald Frank einen Kommentar
+     freigibt. Faellt JavaScript aus, bleibt der eingetragene Wert stehen. */
+  function countVoices(list){
+    var el=document.querySelector('.sn-wrap [data-sn-count]');
+    if(!el||!list) return;
+    var n=Array.prototype.filter.call(list.children,function(x){return x.tagName==='LI'}).length;
+    if(n>0) el.textContent=n;
+  }
+
+  function initComments(){
+    moveNote();
+    var list=document.querySelector('.comment-list');
+    countVoices(list);
+    if(!list || list.dataset.snDone) return;
+    var SHOW=6;   /* Anzahl sichtbarer Threads. Bewusst 6: die Kommentare, die das
+                     Ranking fuer "sani skin erfahrungen" tragen, liegen auf den
+                     Positionen 1 bis 6. Nicht ohne Not verringern. */
+    var items=Array.prototype.filter.call(list.children,function(el){return el.tagName==='LI'});
+    if(items.length<=SHOW) return;
+    list.dataset.snDone='1';
+    var rest=items.slice(SHOW);
+    rest.forEach(function(el){el.classList.add('sn-hidden')});
+
+    var btn=document.createElement('button');
+    btn.type='button';
+    btn.className='sn-open';
+    btn.textContent='Alle Erfahrungsberichte und unsere Antworten anzeigen';
+    btn.setAttribute('aria-expanded','false');
+    list.parentNode.insertBefore(btn,list.nextSibling);
+
+    function expand(){
+      rest.forEach(function(el){el.classList.remove('sn-hidden')});
+      btn.textContent='Weniger anzeigen';
+      btn.setAttribute('aria-expanded','true');
+    }
+    function collapse(){
+      rest.forEach(function(el){el.classList.add('sn-hidden')});
+      btn.textContent='Alle Erfahrungsberichte und unsere Antworten anzeigen';
+      btn.setAttribute('aria-expanded','false');
+    }
+    btn.addEventListener('click',function(){
+      if(btn.getAttribute('aria-expanded')==='true'){
+        collapse(); list.scrollIntoView({behavior:'smooth',block:'start'});
+      }else{ expand(); }
+    });
+
+    /* WICHTIG: Die Zitate weiter oben verlinken auf #comment-123. Liegt der
+       Kommentar hinter dem Aufklapp-Link, ist er ausgeblendet und der Anker
+       laeuft ins Leere. Deshalb erst aufklappen, dann springen.
+       Gilt auch fuer Anker, die bereits in der URL stehen, etwa wenn jemand
+       einen Kommentar-Permalink geteilt oder aus Google aufgerufen hat. */
+    function revealAnchor(hash){
+      if(!hash || hash.indexOf('#comment-')!==0) return false;
+      var target=document.getElementById(hash.slice(1));
+      if(!target) return false;
+      expand();
+      setTimeout(function(){
+        target.scrollIntoView({behavior:'smooth',block:'center'});
+        target.style.transition='background-color .5s';
+        target.style.backgroundColor='#FFF8E6';
+        setTimeout(function(){target.style.backgroundColor=''},2000);
+      },60);
+      return true;
+    }
+    document.addEventListener('click',function(ev){
+      var a=ev.target.closest ? ev.target.closest('a[href^="#comment-"]') : null;
+      if(!a) return;
+      if(revealAnchor(a.getAttribute('href'))){
+        ev.preventDefault();
+        if(history.replaceState) history.replaceState(null,'',a.getAttribute('href'));
+      }
+    });
+    if(location.hash.indexOf('#comment-')===0) revealAnchor(location.hash);
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',initComments);
+  }else{
+    initComments();
+  }
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was bedeutet Skin Food?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Wörtlich übersetzt Nahrung für die Haut. In der Kosmetik steht der Begriff für Pflege mit nährenden pflanzlichen Ölen statt mit Mineralöl. Bei SANNIS ist er wörtlich zu nehmen: Dasselbe Bio-Leinöl steckt in unseren Lebensmitteln und in unserer Pflege."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Heißt es Sani Skin, Saniskin oder SANNIS Skin Food?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gemeint ist immer SANNIS Skin Food, unsere naturinspirierte Kosmetik auf Basis von Bio-Leinöl. Viele suchen die Pflegelinie unter Sani Skin oder Saniskin, das sind gebräuchliche Schreibweisen unseres Markennamens."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann man Leinöl im Gesicht verwenden?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Leinöl ist Bestandteil unserer Skin Food Pflege, etwa im Körperöl, im Augenöl und in der Nachtcreme. Für die Anwendung im Gesicht verwenden wir es in abgestimmten Rezepturen statt pur."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Schmeckt Leinöl bitter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Das SANNIS Bio-Leinöl schmeckt mild und nussig durch die schonende Pressung unter 29 °C. Bitterkeit entsteht in der Regel erst, wenn Leinöl zu heiß gepresst wird oder schon älter ist. Das ist der Punkt, der in den Rückmeldungen am häufigsten vorkommt, fast immer im Vergleich zu anderem Leinöl."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie lange ist das Leinöl haltbar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Das aktuelle Mindesthaltbarkeitsdatum steht immer auf der jeweiligen Produktseite im Shop, weil es vom Abfülldatum abhängt."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie nehme ich die Sonnenblumenkerne am besten zu mir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Kerne passen über Salat, ins Müsli, in Joghurt oder zusammen mit Leinöl über Topfen. Sie lassen sich auch kurz in der Pfanne ohne Fett rösten."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wo bekomme ich SANNIS außer im Onlineshop?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In unserer Manufaktur in Wald am Arlberg und bei über hundert Handelspartnern in Österreich, Deutschland und der Schweiz, von Bio-Läden über Bäckereien bis zu Hotels. Eine vollständige Übersicht nach Bundesland finden Sie bei unseren Vertriebspartnern."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wofür verwende ich welche Geschmacksrichtung?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zimt passt zu Porridge, Müsli und Süßspeisen. Rosmarin und Basilikum zu Salatdressings, Kokos zum Frühstück, die Würzöle zu Nudeln und herzhaften Gerichten. Alle Geschmacksrichtungen basieren auf demselben Bio-Leinöl."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann ich hier selbst eine Erfahrung schreiben?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Diese Seite ist kein Forum, aber das Kommentarfeld am Ende ist offen und eine Anmeldung ist nicht nötig. Wir veröffentlichen alle sachlichen Rückmeldungen, auch kritische."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sannis.at/#frank-nessler",
+      "name": "Frank Nessler",
+      "jobTitle": "Gründer der SANNIS Alpin Manufaktur",
+      "image": "https://sannis.at/wp-content/uploads/2026/08/frank-nessler.webp",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "SANNIS Bio-Leinöl Manufaktur",
+        "url": "https://sannis.at",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Arlbergstraße 53b",
+          "postalCode": "6752",
+          "addressLocality": "Wald am Arlberg",
+          "addressRegion": "Vorarlberg",
+          "addressCountry": "AT"
+        }
+      }
+    }
+  ]
+}
+</script>
+
+<!-- HINWEIS zum Schema: Die Fragen zu Ceylon-Zimt und zum Abo sind bewusst NICHT
+     im Schema, solange die Antworten fehlen. Sobald Frank sie liefert, bitte
+     beide als weitere mainEntity-Eintraege ergaenzen. -->
+
+
+
+<div class="wpc" id="comments">
+  <h2>Alle Erfahrungsberichte im Original</h2>
+  <ol class="comment-list"><li id="comment-14438"><div class="cbody"><div class="m">Helena · 27. April 2024</div>Durch das Peeling ist meine Akne viel besser geworden. Endlich ein Produkt das hilft. Wir haben schon viele Cremes und Reinigungsprodukte ausprobiert, aber leider ohne Erfolg. Das Skinfood Peeling und die Tages- und Nachtcreme helfen meiner Haut endlich. Vielen Dank</div><ol class="children"><li id="comment-14912"><div class="cbody chld"><div class="m">SANNIS Team · 31. Mai 2024</div>Liebe Helena, wie schön, von deiner heilsamen Wirkung unserer Skin Food Linie zu erfahren – genau das war von Anfang an unser Bestreben. Pflanzenkraft als Nahrung für die Haut – von außen und innen. Danke fürs Teilen &amp; weiterhin viel Freude damit. Herzliche Grüße, das SANNIS Team.</div></li></ol></li><li id="comment-14437"><div class="cbody"><div class="m">Saša · 27. April 2024</div>Das Peeling ist wirklich toll für raue Hände. Ich benutze es seit 2 Wochen und meine Hände fühlen sich samt und geschmeidig an. Tolles Produkt</div><ol class="children"><li id="comment-14911"><div class="cbody chld"><div class="m">SANNIS Team · 31. Mai 2024</div>Lieber Saša, freut uns zu hören, dass unser Peeling einen Fixplatz in deiner regelmäßige Pflegeroutine gefunden hat. Wir wünschen dir weiterhin viel Freude damit. Herzliche Grüße, das SANNIS Team.</div></li></ol></li><li id="comment-13729"><div class="cbody"><div class="m">Natalia · 12. März 2024</div>Liebes SANNIS Team, ich muss einfach meine Begeisterung über euer fantastisches SANNIS Skin Food Peeling teilen. Es ist wie eine köstliche Mahlzeit für die Haut – einfach unwiderstehlich! Nach der Anwendung fühlt sich meine Haut glatt und samtig an, perfekt mit Feuchtigkeit versorgt und gleichzeitig erfrischend, dank, wie ich vermute, der Minze! Was mich wirklich umgehauen hat, ist, dass ich das Peeling nach dem Rasieren verwendet habe und meine Haut absolut keine roten Reizungen zeigte. Stattdessen blieb sie herrlich weich und völlig frei von Irritationen. Es ist erstaunlich, wie wenig Produkt man braucht, um großartige Ergebnisse zu erzielen. Selbst meine Teenager-Tochter, die eine sehr empfindliche Haut hat, ist von diesem Peeling begeistert. Ich werde das SANNIS Skin Food Peeling definitiv weiterbestellen. Außerdem ist die Verpackung sehr schön und eignet sich perfekt als Geschenk für qualitätsbewusste Personen. Danke!!! Natalia</div><ol class="children"><li id="comment-14910"><div class="cbody chld"><div class="m">SANNIS Team · 31. Mai 2024</div>Liebe Natalia, danke – dein schönes Feedback freut uns von Herzen und bestärkt uns, dass wir auf dem richtigen Weg sind. Es freut uns sehr, dass immer mehr Peelingnutzer:innen die nährende, beruhigende Wirkung entdecken und den besonders angenehmen Rasur-Effekt, den man spürt, wenn die Hautoberfläche zuvor gepeelt und mit einem sanften Ölfilm geglättet wurde. Der feine Duft von Minze macht das erfrischende, belebende Peelingerlebnis rund – wie du erfreulicherweise bemerkt hast. Wir wünschen dir und deiner Tochter weiterhin viel Spaß mit unserer Skin Food Pflegelinie. Herzliche Grüße, das SANNIS Team.</div></li></ol></li><li id="comment-13527"><div class="cbody"><div class="m">Tanja · 29. Februar 2024</div>Das Skin Food Peeling ist wirklich toll. Es riecht sehr angenehm und die Haut ist danach angenehm weich. Unsere Tochter hatte starke Hautprobleme am Rücken, die sind nach 1 Woche Anwendung bereits stark zurückgegangen. Wir empfehlen es gerne weiter. Vielen Dank.</div><ol class="children"><li id="comment-13533"><div class="cbody chld"><div class="m">SANNIS Team · 29. Februar 2024</div>Liebe Tanja, wie schön zu hören, dass ihr mit der Wirkung unseres Ölpeelings so zufrieden seid. Danke für das Feedback &amp; weiterhin viel Freude mit unseren Produkten. Herzliche Grüße, das SANNIS Team.</div></li></ol></li><li id="comment-13525"><div class="cbody"><div class="m">Nicole · 29. Februar 2024</div>Liebes SANNIS-Team! Einfach Top! Mehr kann ich dazu nicht sagen! Euer SKIN FOOD Peeling hat meine Haut in nur wenigen Tagen sichtlich verbessert und ich möchte es in meiner Pflegeroutine nicht mehr missen! Auch meine sehr empfindliche Haut verträgt es gut. Macht weiter so!</div><ol class="children"><li id="comment-13532"><div class="cbody chld"><div class="m">SANNIS Team · 29. Februar 2024</div>Liebe Nicole, freut uns sehr zu hören, dass du von unserem pflegenden Ölpeeling begeistert bist und es bereits zu deiner Pflegeroutine gehört. Herzliche Grüße, das SANNIS Team.</div></li></ol></li><li id="comment-13524"><div class="cbody"><div class="m">Martina Masopustova · 29. Februar 2024</div>Ich habe die Ehre gehabt die Produkte von Sannis Kosmetik auszuprobieren.Das beste, was ich bisher probierte!Highlight für mich ist auf jeden Fall der Peeling.Im Gegensatz zu anderen riecht traumhaft und lässt die Haut geschmeidig, wie eingeölt . Lieben Dank für die wunderbare Produkte. Martina</div></li><li id="comment-11674"><div class="cbody"><div class="m">Iris · 5. November 2023</div>Wir sind sehr glücklich darüber, dass wir Euer erstklassiges Leinöl durch Zufall entdeckt haben. Es ist aus unserem Alltag nicht mehr weg zu denken und ein Stück “Vorarlberg”, welches wir immer sehr gerne mit nach Basel nehmen. Danke für Euer Engagement!</div><ol class="children"><li id="comment-12815"><div class="cbody chld"><div class="m">SANNIS Team · 22. Januar 2024</div>Liebe Iris, freut uns sehr zu hören, dass ihr die Liebe zu unserem Bio-Leinöl teilt und damit Genussmomente im Alltag verbindet. Weiterhin viel Freude mit unseren Produkten! Herzliche Grüße, das SANNIS Team.</div></li></ol></li><li id="comment-9571"><div class="cbody"><div class="m">Ulrike Bindl · 25. April 2023</div>Hallo liebes Sannis.Team, wir können den anderen Bewertungen nur zustimmen. Haben heute die 3. Bestellung abgeschickt weil es unserem Körper einfach sehr gut tut. Lieferungen erfolgten jeweils umgehend. Wir werden auch weiterhin nachbestellen. Viele Grüße aus München Ulrike und Jacky</div><ol class="children"><li id="comment-9775"><div class="cbody chld"><div class="m">SANNIS Team · 24. Mai 2023</div>Hallo liebe Ulrike und Jacky, das ist sehr schön zu hören, dass ihr nicht nur den Genuss mit SANNIS entdeckt habt, sondern auch den gesundheitlichen Benefit. Weiterhin viel Freude mit unseren Bio-Leinölen und wenn ihr interessiert seid, mehr zu erfahren, können wir euch auch unseren Verein empfehlen. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-7811"><div class="cbody"><div class="m">Nina · 21. Juli 2022</div>Hallo liebes Sannis-Team! Für mich und meine Familie ist euer Leinöl nicht mehr wegzudenken, ob im Salat, in der Suppe, im Joghurt … Unsere Pferde und unser Hund bekommen täglich Leinöl bzw. die Pferde eine kleine Handvoll Leinöl-Peletts. Das Öl ist eine Bereicherung für unser Essen und unsere Gesundheit. Liebe Grüße, Nina</div><ol class="children"><li id="comment-7890"><div class="cbody chld"><div class="m">SANNIS Team · 7. August 2022</div>Liebe Nina, herzlichen Dank für deine Rückmeldung zu unseren Produkten. Es freut uns sehr, dass unsere Leinöle dir/euch so gut tun. Schön, dass ihr unsere Leinöle verwendet. Ganz liebe Grüsse, Das SANNIS-Team</div></li></ol></li><li id="comment-7753"><div class="cbody"><div class="m">rauwarter Molnar claudia · 12. Juli 2022</div>für mich einfach das BESTE !!!!!!! ich habe mit Sicherheit schon sehr viele ausprobiert aber SANNIS ist für mich mit Abstand das BESTE LEINÖL !!!!!!!!! bitte bleibt so wie ihr seid mit lieben Grüßen</div><ol class="children"><li id="comment-7800"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Liebe Claudia, das freut uns sehr zu hören, dass du die Begeisterung für unsere Bio-Leinöle teilst und sie so genießt. Liebe Grüße, das SANNIS Team</div></li><li id="comment-7894"><div class="cbody chld"><div class="m">SANNIS Team · 7. August 2022</div>Liebe Frau Rauwarter-Molnar, herzlichen Dank für ihre langjährige Treue. Es freut uns immer wieder von Ihnen zu hören und zu lesen und das Ihnen unsere Leinöl so gut schmecken. Ganz lieben Dank für ihre Treue und ihre Einkäufe. Mit den besten Grüssen nach Wien! Ihr SANNIS-Team</div></li></ol></li><li id="comment-7752"><div class="cbody"><div class="m">Claudia Rauwarter MOLNAR · 12. Juli 2022</div>für mich einfach das BESTE !!!!!!! ich habe mit Sicherheit schon sehr viele ausprobiert aber SANNIS ist für mich mit Abstand das BESTE LEINÖL !!!!!!!!! bitte bleibt so wie ihr seid mit lieben Grüßen</div></li><li id="comment-6740"><div class="cbody"><div class="m">Rudolf und Barbara Oberhauser · 25. Dezember 2021</div>Wir sind schon seit gut 5 Jahren Kunde bei Sanis und immer wieder von der Qualität begeistert. Obwohl es andere Hersteller gibt die vielleicht auch etwas günstiger sind, so hat uns der Geschmack vom Bio Leinöl absolut überzeugt und “süchtig” gemacht. Hin und wieder probieren wir auch das Leinöl mit Geschmack wie z.B. mit Ingwer oder Kardamon, wobei uns das urbane Leinöl am liebsten ist. Wir genießen es entweder morgens 1 EL mit Sonnenblumenkerne, mischen es auch in unser Joghurt oder geben es zum Salat. Einfach herrlich.</div><ol class="children"><li id="comment-7801"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Lieber Rudolf, liebe Barbara, es freut uns sehr, dass euch der Geschmack unserer Bio-Leinöle überzeugt und wir euch mit unseren Genussprodukten begleiten. Für regelmäßig neue Rezeptideen schaut doch gerne auf unserer Instagram-Blogseite vorbei und lasst euch in der Anwendung der Bio-Leinöle inspirieren: http://www.instagram.com/sannis_bio_leinoele</div></li></ol></li><li id="comment-5920"><div class="cbody"><div class="m">Marie-Thérèse Steinmetz-Balieu · 7. Juni 2021</div>Hallo, wie nimmt man die Sonnenblumenkerne am besten ein ?</div><ol class="children"><li id="comment-7803"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Für die optimale Aufnahme von Vitamin E empfehlen wir täglich morgens einen Esslöffel SANNIS Bio-Leinöl und gleich anschließend einen Teelöffel SANNIS Bio-Sonnenblumenkerne dazu zu genießen. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-5842"><div class="cbody"><div class="m">Martina · 20. Mai 2021</div>Liebes sannis Team! Vielen Dank für die rasche und unkomplizierte Lieferung des hervorragenden Öls aus dem Ländle.</div><ol class="children"><li id="comment-7804"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Liebe Martina, sehr gerne. Vielen Dank für dein Feedback. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-4975"><div class="cbody"><div class="m">Georg · 5. Dezember 2020</div>habe schon einige Leinöle ausprobiert,aber das ist mit Abstand das beste!!! Auch bestellte ich die verschiedensten Genussöle,einfach sensationell !! …. und natürlich dazu die Sonnenblumenkerne,habe auch ein wenig Probleme mit dem Cholesterin! Danke! liebe Grüße Georg</div><ol class="children"><li id="comment-7805"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Lieber Georg, es freut uns sehr, dass du im Genuss und im gesundheitlichen Wohlbefinden auf unsere Bio-Leinöle zählst. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-3021"><div class="cbody"><div class="m">Hannes Pfleger · 17. Juni 2020</div>Mir geht es wie Herrn Knobel – im LändleTV gesehen, sofort bestellt und total überzeugt. Meiner Meinung nach das beste Leinöl, das zu finden ist. Wir haben beinahe alle eure Sorten probiert und sind von dem tollen “weichen” Geschmack begeistert. Ihr habt treue Kunden dazugewonnen. 😉 Danke</div><ol class="children"><li id="comment-7806"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Lieber Hannes, das freut uns sehr zu hören, dass ihr die Begeisterung für unsere Sortenvielfalt an Bio-Leinölen teilt und auch im Geschmack überzeugt seid. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-2867"><div class="cbody"><div class="m">Eugen Knobel · 6. Mai 2020</div>Liebes SANNIS-Team. Ich bin sozusagen durch Zufall auf euer Produktangebot gestossen. Es war eine Sendung im “Ländle-TV”… Meine Bestellung und dann die rasche Lieferung waren total problemlos. Die Qualität eurer Bio-Produkte ist wirklich hervorragend und absolut empfehlenswert! Ich werde ganz sicher Kunde bleiben und euch weiterempfehlen. Herzliche Grüsse von einem sehr zufriedenen und überzeugten Kunden. Eugen Knobel, Götzis</div><ol class="children"><li id="comment-7807"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Lieber Eugen, vielen Dank für dein Feedback. Wir freuen uns sehr zu hören, dass dich unsere Bio-Leinöle von Anfang an überzeugt haben. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-479"><div class="cbody"><div class="m">Josef Tomassovits · 12. September 2017</div>Service perfekt – Sonntag bestellt und Mittwoch geliefert, und noch dazu mit Haltbarkeitsdatum 4 Monate. Wir nehmen das Leinöl gelegentlich und einfach nur präventiv, meist als Beilage zum Frühstück oder zur Jause, am besten zu Schaf- oder Frischkäse. Im Zuge eines Urlaubs in Vorarlberg durften wir die Produktionsstätte besuchen – von Hand und mit Liebe gemacht, sicher auch mit ein Grund für die tolle Qualität. Alles Gute für die Zukunft – und bitte so bleiben.</div><ol class="children"><li id="comment-7808"><div class="cbody chld"><div class="m">SANNIS Team · 21. Juli 2022</div>Schön, dass ihr einen Einblick in unser Tun bekommen habt und unsere Begeisterung für die handgefertigten Bio-Leinöle teilt. Immer wieder schön, so ein Feedback zu erfahren. Liebe Grüße, das SANNIS Team</div></li></ol></li><li id="comment-343"><div class="cbody"><div class="m">claudia rauwarter molnar · 9. Mai 2017</div>Liebes Team! Ich habe bestimmt schon sehr viele verschiedene Firmen die Leinöl produzieren getestet, aber ich muss wirklich mit Abstand sagen dass das Leinöl von SANNIS mit Abstand das BESTE ist !!!!!!!!!!!!!!!!!!! Bitte macht weiter so einfach TOP</div></li><li id="comment-180"><div class="cbody"><div class="m">Karin Schweizer · 27. Dezember 2016</div>Hallo Ich möchte nur sagen, dass ich eines Ihrer Produkte ( Leinöl) in einem Naturkostladen erworben habe und ich noch nie so eine gutes Öl gehabt habe. Da schmeckt man die Natur heraus und ist überhaupt nicht bitter gewesen. Vielen Dank an Euch alle, dass Ihr sowas Gutes auf den Markt stellt. Mfg Karina Schweizer</div></li><li id="comment-20"><div class="cbody"><div class="m">Susanne Vonier · 21. Mai 2016</div>Gott sei Dank bin ich in der glücklichen Lage, dass ich keine großen gesundheitlichen Probleme habe. Dennoch tue ich meinem Körper gerne was Gutes und habe mit dem Leinöl von euch einfach ein gutes Gefühl und vertraue voll auf eure Fähigkeit ein hochwertiges Leinöl zu produzieren. Es schmeckt wunderbar, egal ob pur, im Joghurt, im Salat, usw.. Bin einfach begeistert. Danke!</div><ol class="children"><li id="comment-21"><div class="cbody chld"><div class="m">SANNIS Team · 23. Mai 2016</div>Liebe Susi, vielen Dank für dein Posting was uns sehr freut. Wir freuen uns sehr wenn Dir unser Bio-Leinöl so gut schmeckt. Wir haben auch neue Varianten entwickelt wie beispielsweise Bio-Leinöl mit Zimt, Bio-Leinöl mit Chili, Bio-Leinöl mit Basilikum, Bio-Leinöl mit Kardamom, Bio-Leinöl mit Ingwer und Bio-Leinöl mit Kosos. Für jeden Geschmack etwas dabei. Viele Grüsse, Dein SANNIS Team</div></li><li id="comment-5183"><div class="cbody chld"><div class="m">Petra · 18. Januar 2021</div>Hallo aus der Schweiz Leider finde ich nirgends ob es auch wirklich der gute cheylon Zimt ist? Könnt ihr mir das bitte noch bestätigen?</div></li></ol></li><li id="comment-18"><div class="cbody"><div class="m">Werner Langer 2485 Wimpassing · 10. April 2016</div>Ihr Bio-Leinöl ist das beste das ich je kennengelernt habe. Und ich suche schon jahrelang diese Qualität. Ein Wermutstropfen ist aber zu erwähnen. Die Handhabung des Glases gefällt mir nicht und ist soooo!! unpraktisch,tropft immer aus. Von einer Normalen Glasflasche könnte man das super Öl besser handhaben. Ich verstehe den um drei! Euro höheren Preis ihrer Glasflasche nicht. Mit freundlichen Grüßen WERNER LANGER</div></li><li id="comment-16"><div class="cbody"><div class="m">Hildegard Fetz · 4. Januar 2016</div>Habe von einer Freundin von dem Leinöl erfahren und würde gerne mal in Ihren Laden kommen. Was haben Sie für Öffnungszeiten? Mit freundlichen Grüßen Hildegard Fetz</div></li><li id="comment-15"><div class="cbody"><div class="m">Gerhard Albrecht · 28. Dezember 2015</div>….nach vielen Jahren fast täglichem Sodbrennen und unzähligen Medikamenten habe ich nun SANNIS Bio-Leinöl ausprobiert. Unglaublich: nach weniger als 7 Tagen habe ich kein Sodbrennen mehr (ohne Medikamente)!!! Einfach genial dieses Bio-Leinöl…</div></li><li id="comment-14"><div class="cbody"><div class="m">Alois Egger · 3. September 2015</div>Hallo liebes Sannis Team, ich wollte mich eigentlich nur bedanken! Ich hatte eigentlich schon seit vielen Jahren immer wieder massive Problem mit meinen Blutfettwerten, insbesondere Triglyceride (Rekordwert über 1000mg/dl!!). Dies wurde von div. Ärzten öfter als vererblich abgetan. Da in letzter Zeit aber vermehrt auch noch immer schlechtere Cholesterinwerte (hier vor allem zuviel an “schlechtem” LDL und zu wenig an “gutem” HDL) dazugekommen sind bekam vom Hausarzt Anfang Mai Statine verschrieben, daraufhin hab ich mich schlau gemacht ob es natürliche Alternativen zu diesem Medikament gibt. Ich hab dann nach ganz kurzer Zeit das Medikament abgesetzt und durch euer Leinöl ersetzt. Zusätzlich nehme ich seit Anfang August roten Hefereisextrakt, ein weiteres Heilmittel aus der Natur ein von dem ich in einer Informationszeitschrift des steirischen Herzverbandes gelesen hab. Das Ergebnis kann sich sehen lassen, ich hab gestern den Laborbefund der Kontroll-Blutabnahme nach 3 Monaten bekommen und alle Werte sind perfekt, selbst die Triglycerde! Ich kann natürlich nicht beurteilen welches der beiden Naturheilmittel mehr oder besser wirkt, ist aber auch egal ich werde weiterhin beides nehmen. Mit freundlichen Grüßen Alois Egger</div></li><li id="comment-13"><div class="cbody"><div class="m">Walter Mach · 1. September 2015</div>Das beste Leinöl das ich bisher probierte. Im Gegensatz zu anderen ist es nur einen Hauch bitter, selbst nach mehreren Wochen im Kühlschrank verändert sich der Geschmack nicht. Die anderen Öle schmecken schon beim ersten Öffnen intensiv bitter.</div></li><li id="comment-12"><div class="cbody"><div class="m">Peter Müller · 20. Juli 2015</div>Sehr geehrte Damen und Herrn, ich darf Ihnen zu ihrem Bio-Leinöl gratulieren. Es ist sehr mild und nussig im Geschmack, nicht wie andere Leinöle. Ich nehme es nun schon seit vielen Monaten entweder pur am Morgen auf den nüchternen Magen oder für den Salat, jeweils nach ihrer Vorgabe mit Sonnenblumenkernen. Mein Favorit ist jedoch einen Esslöffel Trester und viel Leinöl über gedünstetem Reis. Das schmeckt hervorragend. Dank ihrem Bio-Leinöl fühle ich mich wieder fit und gesund. Mit freundlichen Grüssen aus der Schweiz Peter Müller</div></li><li id="comment-10"><div class="cbody"><div class="m">Pius · 2. Juli 2015</div>Liebes Sannis-Team, ich bestelle das Leinöl regelmäßig für meine Mama die leider an Reuma leidet. Sie schwört darauf und zusätzlich schmeckts noch hervorragend. Danke und liebe Grüße, Pius ps. übrigens: bestellt und nächsten Tag im Haus – super!</div></li><li id="comment-8"><div class="cbody"><div class="m">Heimo · 11. Mai 2015</div>Hallo liebes Sannis Team, Nehme euer Leinöl und die Sonnenblumenkerne nun seit mehreren Monaten. Kann nur sagen: es tut mir wirklich gut! Meine Haut sieht irgendwie besser aus? Hat dies ebenfalls mit dem Omaha-3 Fettsäuren zu tun? Vielen Dank für eure Rückmeldung. Liebe Grüsse, Heimo</div></li><li id="comment-7"><div class="cbody"><div class="m">Melanie · 31. März 2015</div>Gratulation. Euer Leinöl schmeckt einfach ausgezeichnet. Nehme es täglich und habe es auch schon an viele meiner Freunde weiterempfohlen.</div></li><li id="comment-5"><div class="cbody"><div class="m">Heinz-Jürgen · 8. Februar 2015</div>sensationelles Leinöl. Und sehr guter Service. Habe das Öl über die Homepage bestellt, innerhalb von 4 Tagen aus Österreich erhalten. Grüsse aus Köln…</div><ol class="children"><li id="comment-6"><div class="cbody chld"><div class="m">SANNIS Team · 8. Februar 2015</div>Hallo Heinz-Jürgen, danke für deinen Beitrag. Freut uns sehr wenn`s Dir schmeckt. Viele Grüsse, Frank</div></li></ol></li><li id="comment-4"><div class="cbody"><div class="m">Silvia · 5. Februar 2015</div>eines der besten Bio-Leinöle, die ich je gekostet habe. Seit ich es nehme fühle ich mich einfach gut. Und geschmacklich ausgezeichnet…</div></li><li id="comment-3"><div class="cbody"><div class="m">Stefan · 4. Februar 2015</div>Hallo finde das Leinöl echt super!</div></li></ol>
+  <div id="respond" class="comment-respond">
+    <span id="reply-title" class="gamma comment-reply-title">Schreibe einen Kommentar</span>
+    <form action="#" method="post" id="commentform" class="comment-form">
+      <p class="comment-notes"><span id="email-notes">Deine E-Mail-Adresse wird nicht veröffentlicht.</span> <span class="required-field-message">Erforderliche Felder sind mit <span class="required">*</span> markiert</span></p>
+      <p class="comment-form-comment"><label for="comment">Kommentar <span class="required">*</span></label><textarea id="comment" name="comment" rows="8" required></textarea></p>
+      <p class="comment-form-author"><label for="author">Name <span class="required">*</span></label><input id="author" name="author" type="text" required></p>
+      <p class="comment-form-email"><label for="email">E-Mail-Adresse <span class="required">*</span></label><input id="email" name="email" type="email" required></p>
+      <p class="comment-form-url"><label for="url">Website</label><input id="url" name="url" type="url"></p>
+      <p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"><label for="wp-comment-cookies-consent">Name, E-Mail-Adresse und Website in diesem Browser für meinen nächsten Kommentar speichern.</label></p>
+      <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Kommentar abschicken"></p>
+    </form>
+  </div>
+</div>
+</div>
+<div class="badge">★★★★★<b>4,99</b>Trusted Shops</div>
+</body></html>
