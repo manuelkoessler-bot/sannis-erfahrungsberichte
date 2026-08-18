@@ -31,7 +31,7 @@ wirklich testen kann.
 
 - Antwort auf die Frage nach Ceylon-Zimt (Frank)
 - Antwort auf die Frage nach einem Abo (Frank)
-- Kurzlink zum Google Business Profil (Laura)
+
 
 ## Hinweise
 
