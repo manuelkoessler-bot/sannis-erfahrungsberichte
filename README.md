@@ -27,10 +27,11 @@ wirklich testen kann.
 - Alle Produkt- und Kategorielinks (öffnen sannis.at in einem neuen Tab)
 - Die drei Buttons "Erfahrung schreiben"
 
-## Was noch offen ist
+## Freigegeben
 
-- Antwort auf die Frage nach Ceylon-Zimt (Frank)
-- Antwort auf die Frage nach einem Abo (Frank)
+Frank hat am 18.08.2026 freigegeben und die offenen Fragen beantwortet.
+Der Inhalt ist damit final, es fehlt nur noch Haralds Designvorschlag.
+
 
 
 ## Hinweise
